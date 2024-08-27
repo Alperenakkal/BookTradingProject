@@ -33,17 +33,17 @@ namespace BookTradingProject.Migrations
                 name: "Adres",
                 columns: table => new
                 {
-                    Şehir = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Şehir = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mahalle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cadde = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sokak = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SokakNo = table.Column<int>(type: "int", nullable: false),
-                    DaireNo = table.Column<int>(type: "int", nullable: false),
-                    KullaniciId = table.Column<int>(type: "int", nullable: true)
+                    KullaniciId = table.Column<int>(type: "int", nullable: true),
+                    OlusturlmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adres", x => x.Şehir);
+                    table.PrimaryKey("PK_Adres", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Adres_Kullanicilar_KullaniciId",
                         column: x => x.KullaniciId,

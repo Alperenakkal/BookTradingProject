@@ -24,15 +24,14 @@ namespace BookTradingProject.Migrations
 
             modelBuilder.Entity("BookTradingProject.Models.UserModels.Adres", b =>
                 {
-                    b.Property<string>("Şehir")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Cadde")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DaireNo")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("GuncellemeTarihi")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("KullaniciId")
                         .HasColumnType("int");
@@ -41,14 +40,14 @@ namespace BookTradingProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sokak")
+                    b.Property<DateTime>("OlusturlmaTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Şehir")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SokakNo")
-                        .HasColumnType("int");
-
-                    b.HasKey("Şehir");
+                    b.HasKey("Id");
 
                     b.HasIndex("KullaniciId");
 
