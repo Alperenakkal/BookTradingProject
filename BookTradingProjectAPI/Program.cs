@@ -13,8 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<VeriTabaniBaglami>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
 
-builder.Services.AddSingleton<IKullaniciReadRepository, KullaniciReadRepository>();
-builder.Services.AddSingleton<IKullaniciWriteRepository, KullaniciWriteRepository>();
+builder.Services.AddScoped<IKullaniciReadRepository, KullaniciReadRepository>();
+builder.Services.AddScoped<IKullaniciWriteRepository, KullaniciWriteRepository>();
 
 var app = builder.Build();
 
