@@ -1,6 +1,6 @@
 ﻿
 
-namespace BookTradingProject.Models.UserModels
+namespace BookTradingProjectAPI.Models.UserModels
 {
     public class Adres : BaseModels
     {

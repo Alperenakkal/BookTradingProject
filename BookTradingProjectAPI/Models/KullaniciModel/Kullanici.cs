@@ -1,6 +1,6 @@
 ﻿
 
-namespace BookTradingProject.Models.UserModels
+namespace BookTradingProjectAPI.Models.UserModels
 {
     public enum CinsiyetTipi
     {
@@ -14,7 +14,7 @@ namespace BookTradingProject.Models.UserModels
         public string Sifre { get; set; }
         public string Mail { get; set; }
         public string TelefonNo { get; set; }
-        //public List<Adres> Adresler { get; set; }
+        public List<Adres> Adresler { get; set; }
         public CinsiyetTipi Cinsiyet { get; set; }
 
     }

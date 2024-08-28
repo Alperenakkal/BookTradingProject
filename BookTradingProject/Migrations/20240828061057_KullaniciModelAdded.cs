@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookTradingProject.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class KullaniciModelAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,28 +33,17 @@ namespace BookTradingProject.Migrations
                 name: "Adres",
                 columns: table => new
                 {
-                    Şehir = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Şehir = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mahalle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cadde = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sokak = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SokakNo = table.Column<int>(type: "int", nullable: false),
-                    DaireNo = table.Column<int>(type: "int", nullable: false),
-                    KullaniciId = table.Column<int>(type: "int", nullable: true)
+                    OlusturlmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adres", x => x.Şehir);
-                    table.ForeignKey(
-                        name: "FK_Adres_Kullanicilar_KullaniciId",
-                        column: x => x.KullaniciId,
-                        principalTable: "Kullanicilar",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_Adres", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Adres_KullaniciId",
-                table: "Adres",
-                column: "KullaniciId");
         }
 
         /// <inheritdoc />

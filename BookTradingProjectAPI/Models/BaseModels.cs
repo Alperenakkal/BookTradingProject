@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookTradingProject.Models
+namespace BookTradingProjectAPI.Models
 {
     public class BaseModels
     {
