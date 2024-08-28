@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookTradingProjectAPI.Migrations
 {
     [DbContext(typeof(VeriTabaniBaglami))]
-    [Migration("20240828120412_AddKullanici")]
-    partial class AddKullanici
+    [Migration("20240828135615_addKullanici")]
+    partial class addKullanici
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,10 +25,43 @@ namespace BookTradingProjectAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Adres", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("GuncellemeTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("KullaniciId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Mahalle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OlusturlmaTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Şehir")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KullaniciId");
+
+                    b.ToTable("Adres");
+                });
+
             modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Kullanici", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdSoyad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Cinsiyet")
                         .HasColumnType("int");
@@ -58,6 +91,18 @@ namespace BookTradingProjectAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Kullanicilar");
+                });
+
+            modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Adres", b =>
+                {
+                    b.HasOne("BookTradingProjectAPI.Models.UserModels.Kullanici", null)
+                        .WithMany("Adresler")
+                        .HasForeignKey("KullaniciId");
+                });
+
+            modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Kullanici", b =>
+                {
+                    b.Navigation("Adresler");
                 });
 #pragma warning restore 612, 618
         }
