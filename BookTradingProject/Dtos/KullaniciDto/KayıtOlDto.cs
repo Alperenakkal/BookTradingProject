@@ -11,6 +11,8 @@ namespace BookTradingProject.Dtos.KullaniciDto
     public required string SifreTekrari { get; set; }
     public string Mail { get; set; }
     public CinsiyetTipi cinsiyet { get; set; }
+    public int TelefonNo { get; set; }
+    public List<Adres> Adresler { get; set; }
 
     }
     
