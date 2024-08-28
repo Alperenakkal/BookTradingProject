@@ -1,0 +1,6 @@
+@BookTradingProjectAPI_HostAddress = http://localhost:5230
+
+GET {{BookTradingProjectAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
