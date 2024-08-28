@@ -15,6 +15,8 @@ builder.Services.AddDbContext<VeriTabaniBaglami>(options =>
 
 builder.Services.AddSingleton<IKullaniciReadRepository, KullaniciReadRepository>();
 builder.Services.AddSingleton<IKullaniciWriteRepository, KullaniciWriteRepository>();
+builder.Services.AddSingleton<IKitapWriteRepository, IKitapWriteRepository>();
+builder.Services.AddSingleton<IKitapReadRepository, IKitapReadRepository>();
 
 var app = builder.Build();
 
