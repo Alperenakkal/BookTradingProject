@@ -2,10 +2,10 @@
 
 namespace BookTradingProjectAPI.Models
 {
-    public class BaseModels
+    public abstract class BaseModels
     {
-        [Key]
-        public string Id { get; set; }
+        
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime OlusturlmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 
