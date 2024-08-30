@@ -12,7 +12,8 @@ namespace BookTradingProjectAPI.Dtos.KullaniciDto
     public string Mail { get; set; }
     public CinsiyetTipi cinsiyet { get; set; }
     public string TelefonNo { get; set; }
-    public List<Adres> Adresler { get; set; }
+    public string Sehir { get; set; } = string.Empty;
+    public string Mahalle { get; set; } = string.Empty;
 
     }
     

@@ -17,7 +17,8 @@ namespace BookTradingProjectAPI.Models.UserModels
         public string? SifreTekrari { get; set; }
         public string Mail { get; set; } = string.Empty;
         public string TelefonNo { get; set; } = string.Empty ;
-        public Adres? Adresler { get; set; }
+        public string Sehir { get; set; } = string.Empty;
+        public string Mahalle { get; set; } = string.Empty;
         public CinsiyetTipi Cinsiyet { get; set; }
 
     }

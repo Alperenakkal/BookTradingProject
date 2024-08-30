@@ -2,7 +2,7 @@
 {
     public class GirisYapDto
     {
-        public string Mail { get; set; }
+        public string KullaniciAdiVeyaMail { get; set; }
         public string Sifre { get; set; }
     }
 }

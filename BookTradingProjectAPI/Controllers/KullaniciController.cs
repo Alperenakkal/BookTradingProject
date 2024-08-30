@@ -1,8 +1,5 @@
 ﻿using BookTradingProjectAPI.Dtos.KullaniciDto;
-using BookTradingProjectAPI.Models.UserModels;
-using BookTradingProjectAPI.Repositories.IRepositories;
-using BookTradingProjectAPI.Services.LoginService;
-using BookTradingProjectAPI.Services.RegisterService;
+using BookTradingProjectAPI.Services.KullaniciService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookTradingProject.Controllers
@@ -11,18 +8,17 @@ namespace BookTradingProject.Controllers
     [ApiController]
     public class KullaniciController : ControllerBase
     {
-        private readonly IKayitOlService _kayıtolService;
-        private readonly IGirisYapService _girisYapService;
+        private readonly IKullaniciService _kullaniciService;
 
-        public KullaniciController(IKayitOlService kayıtolService, IGirisYapService girisYapService)
+        public KullaniciController(IKullaniciService kullaniciService)
         {
-            _kayıtolService = kayıtolService;
-            _girisYapService = girisYapService;
+            _kullaniciService = kullaniciService;
         }
-        [HttpPost("kayitol")]
-        public async Task<IActionResult> KayıtOl(Kullanici model)
+
+        [HttpPost("KayitOl")]
+        public async Task<IActionResult> KayıtOl(KayıtOlDto kayıtOlDto)
         {
-            var result = await _kayıtolService.KayitOlAsync(model);
+            var result = await _kullaniciService.KayitOlAsync(kayıtOlDto);
             if (result)
             {
                 return Ok("Kayıt başarılı.");
@@ -31,7 +27,7 @@ namespace BookTradingProject.Controllers
             return BadRequest("Kayıt başarısız.");
         
         }
-        [HttpPost]
+        [HttpPost("GirisYap")]
         public async Task<IActionResult> GirisYap([FromBody] GirisYapDto girisYapDto)
         {
             if (girisYapDto == null)
@@ -40,7 +36,7 @@ namespace BookTradingProject.Controllers
             }
 
             // Call the service to authenticate the user
-            var loginSuccess = await _girisYapService.GirisYapAsync(girisYapDto);
+            var loginSuccess = await _kullaniciService.GirisYapAsync(girisYapDto);
 
             if (loginSuccess)
             {

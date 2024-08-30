@@ -1,6 +1,7 @@
 using BookTradingProjectAPI.Data.Context;
 using BookTradingProjectAPI.Repositories;
 using BookTradingProjectAPI.Repositories.IRepositories;
+using BookTradingProjectAPI.Services.KullaniciService;
 using BookTradingProjectAPI.Services.BookService;
 using BookTradingProjectAPI.Services.LoginService;
 using BookTradingProjectAPI.Services.RegisterService;
@@ -20,11 +21,12 @@ builder.Services.AddDbContext<VeriTabaniBaglami>(options =>
 // Scoped services are preferred for repository patterns to ensure a new instance per request.
 builder.Services.AddScoped<IKullaniciReadRepository, KullaniciReadRepository>();
 builder.Services.AddScoped<IKullaniciWriteRepository, KullaniciWriteRepository>();
-builder.Services.AddScoped<IKitapWriteRepository, KitapWriteRepository>(); // Correcting to use the actual implementation
-builder.Services.AddScoped<IKitapReadRepository, KitapReadRepository>();   // Correcting to use the actual implementation
+builder.Services.AddScoped<IKitapWriteRepository, KitapWriteRepository>();
+builder.Services.AddScoped<IKitapReadRepository, KitapReadRepository>();
+builder.Services.AddScoped<IKullaniciService, KullaniciService>();
 builder.Services.AddScoped<IKayitOlService, KayitolService>();
 builder.Services.AddScoped<IGirisYapService, GirisYapService>();
-builder.Services.AddScoped<IKitapService,KitapService>();
+builder.Services.AddScoped<IKitapService, KitapService>();
 
 var app = builder.Build();
 
