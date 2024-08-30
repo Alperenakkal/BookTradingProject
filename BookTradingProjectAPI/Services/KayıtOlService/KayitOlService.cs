@@ -40,7 +40,8 @@ namespace BookTradingProjectAPI.Services.RegisterService
                     Mail = model.Mail,
                     Cinsiyet = model.Cinsiyet,
                     TelefonNo = model.TelefonNo,
-                    Adresler = model.Adresler
+                    Sehir = model.Sehir,
+                    Mahalle= model.Mahalle
                 };
 
                 // Kullanıcıyı veritabanına ekleme

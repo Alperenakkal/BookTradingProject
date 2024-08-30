@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Services\IServices\" />
+    <Folder Include="Services\NewFolder\" />
   </ItemGroup>
 
 </Project>
