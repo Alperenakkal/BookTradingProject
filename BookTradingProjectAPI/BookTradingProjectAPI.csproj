@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\IServices\**" />
+    <Content Remove="Services\IServices\**" />
+    <EmbeddedResource Remove="Services\IServices\**" />
+    <None Remove="Services\IServices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -22,9 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\KullaniciDto\ResponseDto\" />
+    <Folder Include="Dtos\KullaniciDto\RequestDto\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Services\IServices\" />
-    <Folder Include="Services\NewFolder\" />
   </ItemGroup>
 
 </Project>
