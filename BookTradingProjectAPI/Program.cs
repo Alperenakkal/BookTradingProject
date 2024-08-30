@@ -1,6 +1,7 @@
 using BookTradingProjectAPI.Data.Context;
 using BookTradingProjectAPI.Repositories;
 using BookTradingProjectAPI.Repositories.IRepositories;
+using BookTradingProjectAPI.Services.BookService;
 using BookTradingProjectAPI.Services.LoginService;
 using BookTradingProjectAPI.Services.RegisterService;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IKitapWriteRepository, KitapWriteRepository>(); // Co
 builder.Services.AddScoped<IKitapReadRepository, KitapReadRepository>();   // Correcting to use the actual implementation
 builder.Services.AddScoped<IKayitOlService, KayitolService>();
 builder.Services.AddScoped<IGirisYapService, GirisYapService>();
+builder.Services.AddScoped<IKitapService,KitapService>();
 
 var app = builder.Build();
 
