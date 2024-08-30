@@ -24,14 +24,12 @@ namespace BookTradingProjectAPI.Migrations
 
             modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Adres", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("KullaniciId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Mahalle")
                         .IsRequired()
@@ -46,19 +44,21 @@ namespace BookTradingProjectAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KullaniciId");
-
                     b.ToTable("Adres");
                 });
 
             modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Kullanici", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdSoyad")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("AdreslerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Cinsiyet")
                         .HasColumnType("int");
@@ -81,24 +81,26 @@ namespace BookTradingProjectAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SifreTekrari")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TelefonNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Kullanicilar");
-                });
+                    b.HasIndex("AdreslerId");
 
-            modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Adres", b =>
-                {
-                    b.HasOne("BookTradingProjectAPI.Models.UserModels.Kullanici", null)
-                        .WithMany("Adresler")
-                        .HasForeignKey("KullaniciId");
+                    b.ToTable("Kullanicilar");
                 });
 
             modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Kullanici", b =>
                 {
+                    b.HasOne("BookTradingProjectAPI.Models.UserModels.Adres", "Adresler")
+                        .WithMany()
+                        .HasForeignKey("AdreslerId");
+
                     b.Navigation("Adresler");
                 });
 #pragma warning restore 612, 618

@@ -15,16 +15,16 @@ namespace BookTradingProjectAPI.Services.RegisterService
             _kullaniciWriteRepository = kullaniciWriteRepository;
         }
 
-        public async Task<bool> KayıtOlAsync(KayıtOlDto kayıtOlDto)
+        public async Task<bool> KayıtOlAsync(Kullanici model)
         {
             // Şifre doğrulama
-            if (kayıtOlDto.Sifre != kayıtOlDto.SifreTekrari)
+            if (model.Sifre != model.SifreTekrari)
             {
                 return false;
             }
 
             // Kullanıcı adı kontrolü
-            var existingUser = await _kullaniciReadRepository.GetSingleAsync(k => k.KullaniciAdi == kayıtOlDto.KullaniciAdi);
+            var existingUser = await _kullaniciReadRepository.GetSingleAsync(k => k.KullaniciAdi == model.KullaniciAdi);
             if (existingUser != null)
             {
                 return false; // Kullanıcı adı zaten kullanılıyor
@@ -33,13 +33,13 @@ namespace BookTradingProjectAPI.Services.RegisterService
             // DTO'dan Kullanici modelini manuel olarak oluşturma
             var kullanici = new Kullanici
             {
-                KullaniciAdi = kayıtOlDto.KullaniciAdi,
-                AdSoyad = kayıtOlDto.AdSoyad,
-                Sifre = kayıtOlDto.Sifre,
-                Mail = kayıtOlDto.Mail,
-                Cinsiyet = kayıtOlDto.cinsiyet,
-                TelefonNo = kayıtOlDto.TelefonNo,
-                Adresler = kayıtOlDto.Adresler
+                KullaniciAdi = model.KullaniciAdi,
+                AdSoyad = model.AdSoyad,
+                Sifre = model.Sifre,
+                Mail = model.Mail,
+                Cinsiyet = model.Cinsiyet,
+                TelefonNo = model.TelefonNo,
+                Adresler = model.Adresler
             };
 
             // Kullanıcıyı veritabanına ekleme

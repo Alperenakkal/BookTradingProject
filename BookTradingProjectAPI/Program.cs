@@ -1,6 +1,7 @@
 ﻿using BookTradingProjectAPI.Data.Context;
 using BookTradingProjectAPI.Repositories;
 using BookTradingProjectAPI.Repositories.IRepositories;
+using BookTradingProjectAPI.Services.LoginService;
 using BookTradingProjectAPI.Services.RegisterService;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,8 @@ builder.Services.AddDbContext<VeriTabaniBaglami>(options =>
 
 builder.Services.AddScoped<IKullaniciReadRepository, KullaniciReadRepository>();
 builder.Services.AddScoped<IKullaniciWriteRepository, KullaniciWriteRepository>();
-builder.Services.AddScoped<IKayıtolService, KayıtolService>();
+builder.Services.AddScoped<IKayitOlService, KayitolService>();
+builder.Services.AddScoped<IGirisYapService, GirisYapService>();
 
 var app = builder.Build();
 

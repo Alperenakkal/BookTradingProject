@@ -4,7 +4,7 @@ namespace BookTradingProjectAPI.Dtos.KullaniciDto
 {
     public class KayıtOlDto
     {
-    public string Id { get; set; }
+    
     public required string KullaniciAdi { get; set; }
     public string AdSoyad { get; set; }
     public required string Sifre { get; set; }

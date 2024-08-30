@@ -3,8 +3,8 @@ using BookTradingProjectAPI.Models.UserModels;
 
 namespace BookTradingProjectAPI.Services.RegisterService
 {
-    public interface IKayıtolService
+    public interface IKayitOlService
     {
-        Task<bool> KayıtOlAsync(Kullanici model);
+      Task<bool> KayitOlAsync(Kullanici model);
     }
 }
