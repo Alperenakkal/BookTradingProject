@@ -31,15 +31,10 @@ namespace BookTradingProjectAPI.Services.KullaniciService
         {
             try
             {
-                if (kayıtOlDto == null)
-                {
-                    _logger.LogWarning("User registration attempt with null user.");
-                    return false;
-                }
-
+         
                 if (kayıtOlDto.Sifre != kayıtOlDto.SifreTekrari)
                 {
-                    _logger.LogWarning("Passwords do not match for user {UserName}.", kayıtOlDto.KullaniciAdi);
+                    _logger.LogWarning("Şifreler Eşleşmiyor.");
                     return false;
                 }
 
@@ -49,7 +44,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
 
                 if (existingUserByUsername != null || existingUserByEmail != null)
                 {
-                    _logger.LogWarning("User with username {UserName} or email {Email} already exists.", kayıtOlDto.KullaniciAdi, kayıtOlDto.Mail);
+                    _logger.LogWarning("Böyle bir Kullanıcı Adı Yada Mail ile Hesap oluşturulmuş. ");
                     return false;
                 }
 
@@ -60,12 +55,12 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 await _kullaniciWriteRepository.AddSingleAsync(kullanici);
                 await _kullaniciWriteRepository.SaveAsync();
 
-                _logger.LogInformation("User {UserName} registered successfully.", kayıtOlDto.KullaniciAdi);
+                _logger.LogInformation("Başarıyla Kayıt Yapıldı.");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while registering user {UserName}.", kayıtOlDto.KullaniciAdi);
+                _logger.LogError(ex, "Hata...");
                 return false;
             }
         }
@@ -76,8 +71,8 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 // Check if the input is valid
                 if (string.IsNullOrEmpty(loginRequest.KullaniciAdiVeyaMail) || string.IsNullOrEmpty(loginRequest.Sifre))
                 {
-                    _logger.LogWarning("Login attempt with empty username/email or password.");
-                    return new GirisYapResponseDto { Success = false }; // Invalid input
+                    _logger.LogWarning("Boşluk Bırakmayınız...");
+                    return new GirisYapResponseDto { Success = false }; 
                 }
 
                 // Retrieve the user by username or email
@@ -85,8 +80,8 @@ namespace BookTradingProjectAPI.Services.KullaniciService
 
                 if (user == null)
                 {
-                    _logger.LogWarning("Login failed for {UsernameOrEmail}. User not found.", loginRequest.KullaniciAdiVeyaMail);
-                    return new GirisYapResponseDto { Success = false }; // User not found
+                    _logger.LogWarning("Kullanıcı Bulunamadı.");
+                    return new GirisYapResponseDto { Success = false };
                 }
 
                 // Validate the password
@@ -97,16 +92,16 @@ namespace BookTradingProjectAPI.Services.KullaniciService
 
                 if (hash != loginHash)
                 {
-                    _logger.LogWarning("Login failed for {UsernameOrEmail}. Incorrect password.", loginRequest.KullaniciAdiVeyaMail);
-                    return new GirisYapResponseDto { Success = false }; // Incorrect password
+                    _logger.LogWarning("Hatalı Kullanıcı Adı/Mail veya Şifre");
+                    return new GirisYapResponseDto { Success = false }; 
                 }
 
                 // Login successful
-                _logger.LogInformation("User {Username} logged in successfully.", user.KullaniciAdi);
+                _logger.LogInformation("Başarıyla Giriş Yapıldı.");
 
                 // Create and return the token
                 var token = _tokenHandler.CreateAccessToken(60); // 60 dakikalık geçerlilik süresi
-                _logger.LogInformation("Generated token: {Token}", token.AccessToken);
+                _logger.LogInformation("Token: {Token}", token.AccessToken);
 
                 // HttpContext'i al
                 var httpContext = _httpContextAccessor.HttpContext;
@@ -134,7 +129,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging in user {UsernameOrEmail}.", loginRequest.KullaniciAdiVeyaMail);
+                _logger.LogError(ex, "Hata...");
                 return new GirisYapResponseDto { Success = false };
             }
         }
@@ -152,12 +147,12 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 // Remove the authentication cookie
                 _httpContextAccessor.HttpContext.Response.Cookies.Delete("AuthToken");
 
-                _logger.LogInformation("User logged out successfully.");
+                _logger.LogInformation("Başarıyla Çıkış Yapıldı.");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred during logout.");
+                _logger.LogError(ex, "Çıkış Yaparken Bir Hata Oluştu.");
                 return false;
             }
         }
@@ -176,14 +171,12 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 Sifre = HashPassword(kayıtOlDto.Sifre),
             };
         }
-
         private string HashPassword(string password)
         {
             var salt = GenerateSalt();
             var hash = ComputeSha256Hash(password + salt);
             return $"{salt}:{hash}";
         }
-
         private string GenerateSalt()
         {
             var saltBytes = new byte[16];

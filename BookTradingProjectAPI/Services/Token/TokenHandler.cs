@@ -18,16 +18,16 @@ public class TokenHandler : ITokenHandler
     {
         Token token = new();
 
-        // Use the key from JwtSettings
+   
         SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_jwtSettings.Key));
 
-        // Create signing credentials with the symmetric key and algorithm
+        
         SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
-        // Set token expiration
+       
         token.Expiration = DateTime.UtcNow.AddMinutes(minutes);
 
-        // Create the JWT token
+       
         JwtSecurityToken securityToken = new(
             audience: _jwtSettings.Audience,
             issuer: _jwtSettings.Issuer,
@@ -36,7 +36,7 @@ public class TokenHandler : ITokenHandler
             signingCredentials: signingCredentials
         );
 
-        // Write the token
+        
         JwtSecurityTokenHandler tokenHandler = new();
         token.AccessToken = tokenHandler.WriteToken(securityToken);
 
