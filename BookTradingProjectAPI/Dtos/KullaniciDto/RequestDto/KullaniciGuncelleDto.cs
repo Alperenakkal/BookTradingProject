@@ -1,4 +1,4 @@
-﻿namespace BookTradingProjectAPI.Dtos.KullaniciDto
+﻿namespace BookTradingProjectAPI.Dtos.KullaniciDto.RequestDto
 {
     public class KullaniciGuncelleDto
     {

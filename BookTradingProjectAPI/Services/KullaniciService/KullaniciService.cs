@@ -1,6 +1,10 @@
-﻿using BookTradingProjectAPI.Dtos.KullaniciDto;
+﻿using BookTradingProjectAPI.Dtos.KullaniciDto.RequestDto;
+using BookTradingProjectAPI.Dtos.KullaniciDto.ResponseDto;
 using BookTradingProjectAPI.Models.UserModels;
 using BookTradingProjectAPI.Repositories.IRepositories;
+using BookTradingProjectAPI.Services.Token;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,15 +15,19 @@ namespace BookTradingProjectAPI.Services.KullaniciService
         private readonly IKullaniciReadRepository _kullaniciReadRepository;
         private readonly IKullaniciWriteRepository _kullaniciWriteRepository;
         private readonly ILogger<KullaniciService> _logger;
+        private readonly ITokenHandler _tokenHandler;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public KullaniciService(IKullaniciReadRepository kullaniciReadRepository, IKullaniciWriteRepository kullaniciWriteRepository, ILogger<KullaniciService> logger)
+        public KullaniciService(IKullaniciReadRepository kullaniciReadRepository, IKullaniciWriteRepository kullaniciWriteRepository, ILogger<KullaniciService> logger, ITokenHandler tokenHandler, IHttpContextAccessor httpContextAccessor)
         {
             _kullaniciReadRepository = kullaniciReadRepository;
             _kullaniciWriteRepository = kullaniciWriteRepository;
             _logger = logger;
+            _tokenHandler = tokenHandler;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> KayitOlAsync(KayıtOlDto kayıtOlDto)
+        public async Task<bool> KayitOlAsync(KayıtOlDtoRequest kayıtOlDto)
         {
             try
             {
@@ -61,55 +69,99 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 return false;
             }
         }
-        public async Task<bool> GirisYapAsync(GirisYapDto girisYapDto)
+        public async Task<GirisYapResponseDto> GirisYapAsync(GirisYapDtoRequest loginRequest)
         {
             try
             {
-                if (girisYapDto == null || string.IsNullOrEmpty(girisYapDto.KullaniciAdiVeyaMail) || string.IsNullOrEmpty(girisYapDto.Sifre))
+                // Check if the input is valid
+                if (string.IsNullOrEmpty(loginRequest.KullaniciAdiVeyaMail) || string.IsNullOrEmpty(loginRequest.Sifre))
                 {
                     _logger.LogWarning("Login attempt with empty username/email or password.");
-                    return false;
+                    return new GirisYapResponseDto { Success = false }; // Invalid input
                 }
 
-                // Fetch the user based on username or email
-                var kullanici = await _kullaniciReadRepository.GetSingleAsync(u => u.KullaniciAdi == girisYapDto.KullaniciAdiVeyaMail || u.Mail == girisYapDto.KullaniciAdiVeyaMail);
+                // Retrieve the user by username or email
+                var user = await _kullaniciReadRepository.GetSingleAsync(u => u.KullaniciAdi == loginRequest.KullaniciAdiVeyaMail || u.Mail == loginRequest.KullaniciAdiVeyaMail);
 
-                if (kullanici == null)
+                if (user == null)
                 {
-                    _logger.LogWarning("Login failed for {KullaniciAdiVeyaMail}. User not found.", girisYapDto.KullaniciAdiVeyaMail);
-                    return false;
+                    _logger.LogWarning("Login failed for {UsernameOrEmail}. User not found.", loginRequest.KullaniciAdiVeyaMail);
+                    return new GirisYapResponseDto { Success = false }; // User not found
                 }
 
-                // Check the hashed password
-                var sifreParts = kullanici.Sifre.Split(':');
-                if (sifreParts.Length != 2)
+                // Validate the password
+                var passwordParts = user.Sifre.Split(':');
+                var salt = passwordParts[0];
+                var hash = passwordParts[1];
+                var loginHash = ComputeSha256Hash(loginRequest.Sifre + salt);
+
+                if (hash != loginHash)
                 {
-                    _logger.LogError("Stored password format is incorrect for user {KullaniciAdiVeyaMail}.", girisYapDto.KullaniciAdiVeyaMail);
-                    return false;
+                    _logger.LogWarning("Login failed for {UsernameOrEmail}. Incorrect password.", loginRequest.KullaniciAdiVeyaMail);
+                    return new GirisYapResponseDto { Success = false }; // Incorrect password
                 }
 
-                var salt = sifreParts[0];
-                var storedHash = sifreParts[1];
-                var loginHash = ComputeSha256Hash(girisYapDto.Sifre + salt);
+                // Login successful
+                _logger.LogInformation("User {Username} logged in successfully.", user.KullaniciAdi);
 
-                if (storedHash != loginHash)
+                // Create and return the token
+                var token = _tokenHandler.CreateAccessToken(60); // 60 dakikalık geçerlilik süresi
+                _logger.LogInformation("Generated token: {Token}", token.AccessToken);
+
+                // HttpContext'i al
+                var httpContext = _httpContextAccessor.HttpContext;
+                if (httpContext != null)
                 {
-                    _logger.LogWarning("Login failed for {KullaniciAdiVeyaMail}. Incorrect password.", girisYapDto.KullaniciAdiVeyaMail);
+                    // Generate a secure cookie with the token
+                    var cookieOptions = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTime.UtcNow.AddMinutes(60)
+                    };
+
+                    // Token'ı çereze ekle
+                    httpContext.Response.Cookies.Append("AuthToken", token.AccessToken, cookieOptions);
+                }
+
+                // Token'ı yanıt gövdesine ekle
+                return new GirisYapResponseDto
+                {
+                    Success = true,
+                    Token = token.AccessToken
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while logging in user {UsernameOrEmail}.", loginRequest.KullaniciAdiVeyaMail);
+                return new GirisYapResponseDto { Success = false };
+            }
+        }
+        public async Task<bool> CikisYap()
+        {
+            try
+            {
+                // Check if the context and request are available
+                if (_httpContextAccessor.HttpContext == null)
+                {
+                    _logger.LogWarning("HTTP context is null during logout.");
                     return false;
                 }
 
-                // Successful login
-                _logger.LogInformation("User {KullaniciAdi} logged in successfully.", kullanici.KullaniciAdi);
+                // Remove the authentication cookie
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete("AuthToken");
+
+                _logger.LogInformation("User logged out successfully.");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging in user {KullaniciAdiVeyaMail}.", girisYapDto.KullaniciAdiVeyaMail);
+                _logger.LogError(ex, "An error occurred during logout.");
                 return false;
             }
         }
-
-        private Kullanici MapDtoToKullanici(KayıtOlDto kayıtOlDto)
+        private Kullanici MapDtoToKullanici(KayıtOlDtoRequest kayıtOlDto)
         {
             return new Kullanici
             {
@@ -150,7 +202,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 return Convert.ToBase64String(bytes);
             }
         }
-        
+
 
     }
 }

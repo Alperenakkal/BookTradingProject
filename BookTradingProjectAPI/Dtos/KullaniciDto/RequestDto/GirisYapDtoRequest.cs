@@ -1,6 +1,6 @@
-﻿namespace BookTradingProjectAPI.Dtos.KullaniciDto
+﻿namespace BookTradingProjectAPI.Dtos.KullaniciDto.RequestDto
 {
-    public class GirisYapDto
+    public class GirisYapDtoRequest
     {
         public string KullaniciAdiVeyaMail { get; set; }
         public string Sifre { get; set; }
