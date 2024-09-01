@@ -3,6 +3,7 @@ using BookTradingProjectAPI.Repositories;
 using BookTradingProjectAPI.Repositories.IRepositories;
 using BookTradingProjectAPI.Services.KullaniciService;
 using BookTradingProjectAPI.Services.Token;
+using BookTradingProjectAPI.Services.BookService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -25,12 +26,14 @@ builder.Services.AddScoped<IKitapWriteRepository, KitapWriteRepository>();
 builder.Services.AddScoped<IKitapReadRepository, KitapReadRepository>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();
 builder.Services.AddScoped<ITokenHandler, TokenHandler>();
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<IKitapService, KitapService>();
+
+// Register IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-
-
 // Configure JWT Authentication
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -60,7 +63,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // Add this to enable authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
