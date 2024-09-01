@@ -27,25 +27,25 @@ namespace BookTradingProject.Controllers
             return BadRequest("Kayıt başarısız.");
         
         }
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] GirisYapDtoRequest loginRequest)
+        [HttpPost("GirisYap")]
+        public async Task<IActionResult> GirisYap([FromBody] GirisYapDtoRequest loginRequest)
         {
             var result = await _kullaniciService.GirisYapAsync(loginRequest);
             if (result.Success)
             {
-                return Ok(result); // Return the token if successful
+                return Ok(result); // Başarılıysa Token Döndür
             }
-            return Unauthorized(); // Or BadRequest() depending on your API design
+            return Unauthorized(); 
         }
-        [HttpPost("logout")]
+        [HttpPost("CikisYap")]
         public async Task<IActionResult> CikisYap()
         {
             var result = await _kullaniciService.CikisYap();
 
             if (result)
-                return Ok(new { message = "Logged out successfully." });
+                return Ok(new { message = "Başarıyla Çıkış Yapıldı." });
 
-            return BadRequest(new { message = "Logout failed." });
+            return BadRequest(new { message = "Hata..." });
         }
     }
 }
