@@ -24,17 +24,24 @@ namespace BookTradingProjectAPI.Controllers
                 var result = await _kitapService.KitapEkle(model);
 
                 return Ok(result);
-
-
             }
             catch (Exception e )
             {
-
                 throw new Exception("Kitap ekleme basarisiz", e);
             }
-
-           
-
+        }
+        [HttpGet("GetByIdFromKitap")]
+        public async Task<IActionResult> GetByIdFromKitap(Guid id)
+        {
+            var result = await _kitapService.GetByIdFromKitap(id);
+            return Ok(result);
+        }
+        
+        [HttpDelete("KitapSil")]
+        public async Task<IActionResult> KitapSil(Guid id)
+        {
+            var result = await _kitapService.KitapSil(id);
+            return Ok(result);
         }
     }
 }

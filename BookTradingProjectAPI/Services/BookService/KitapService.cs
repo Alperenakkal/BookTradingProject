@@ -47,5 +47,28 @@ namespace BookTradingProjectAPI.Services.BookService
           
 
         }
+        public async Task<Kitap> GetByIdFromKitap(Guid id)
+        {
+            Kitap kitap = await _kitapReadRepository.GetByIdAsync(id);
+            return kitap;
+
+        }
+        public async Task<bool> KitapSil(Guid id)
+        {
+            try
+            {
+                Kitap kitap = await _kitapReadRepository.GetByIdAsync(id);
+                var isDeleted = _kitapWriteRepository.RemoveSingle(kitap);
+                if (isDeleted == false) { return false; }
+                await _kitapWriteRepository.SaveAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("Kitap silme islemi basarisiz",e);
+            }
+           
+
     }
 }
