@@ -8,7 +8,7 @@ namespace BookTradingProjectAPI.Middleware
     {
         public MapperKitap() 
         {
-            Mapper
+            
         }
 
     }

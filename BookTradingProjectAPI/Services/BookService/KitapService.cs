@@ -1,4 +1,5 @@
-﻿using BookTradingProjectAPI.Dtos.RequestDto;
+﻿using Azure.Core;
+using BookTradingProjectAPI.Dtos.RequestDto;
 using BookTradingProjectAPI.Models.KitapModel;
 using BookTradingProjectAPI.Repositories.IRepositories;
 
@@ -34,7 +35,7 @@ namespace BookTradingProjectAPI.Services.BookService
                     OlusturlmaTarihi = DateTime.Now
 
                 };
-                var isAdded =  await _kitapWriteRepository.AddSingleAsync(kitap);
+                var isAdded = await _kitapWriteRepository.AddSingleAsync(kitap);
                 if (isAdded == false) { return false; }
                 await _kitapWriteRepository.SaveAsync();
                 return true;
@@ -42,22 +43,24 @@ namespace BookTradingProjectAPI.Services.BookService
             catch (Exception e)
             {
 
-                throw new Exception("Kitap ekleme işlemi basarizi",e);
+                throw new Exception("Kitap ekleme işlemi basarizi", e);
             }
-          
+
 
         }
-        public async Task<Kitap> GetByIdFromKitap(Guid id)
+        public async Task<Kitap> GetByIdFromKitap(string id)
         {
-            Kitap kitap = await _kitapReadRepository.GetByIdAsync(id);
+            Guid Id = new Guid(id);
+            Kitap kitap = await _kitapReadRepository.GetByIdAsync(Id);
             return kitap;
 
         }
-        public async Task<bool> KitapSil(Guid id)
+        public async Task<bool> KitapSil(string id)
         {
             try
             {
-                Kitap kitap = await _kitapReadRepository.GetByIdAsync(id);
+                Guid Id = new Guid(id);
+                Kitap kitap = await _kitapReadRepository.GetByIdAsync(Id);
                 var isDeleted = _kitapWriteRepository.RemoveSingle(kitap);
                 if (isDeleted == false) { return false; }
                 await _kitapWriteRepository.SaveAsync();
@@ -66,9 +69,10 @@ namespace BookTradingProjectAPI.Services.BookService
             catch (Exception e)
             {
 
-                throw new Exception("Kitap silme islemi basarisiz",e);
+                throw new Exception("Kitap silme islemi basarisiz", e);
             }
-           
 
+
+        }
     }
 }
