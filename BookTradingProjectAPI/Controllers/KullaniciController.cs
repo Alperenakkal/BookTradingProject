@@ -1,4 +1,4 @@
-﻿using BookTradingProjectAPI.Dtos.KullaniciDto;
+﻿using BookTradingProjectAPI.Dtos.KullaniciDto.RequestDto;
 using BookTradingProjectAPI.Services.KullaniciService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace BookTradingProject.Controllers
         }
 
         [HttpPost("KayitOl")]
-        public async Task<IActionResult> KayıtOl(KayıtOlDto kayıtOlDto)
+        public async Task<IActionResult> KayıtOl(KayıtOlDtoRequest kayıtOlDto)
         {
             var result = await _kullaniciService.KayitOlAsync(kayıtOlDto);
             if (result)
@@ -27,27 +27,25 @@ namespace BookTradingProject.Controllers
             return BadRequest("Kayıt başarısız.");
         
         }
-        [HttpPost("GirisYap")]
-        public async Task<IActionResult> GirisYap([FromBody] GirisYapDto girisYapDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] GirisYapDtoRequest loginRequest)
         {
-            if (girisYapDto == null)
+            var result = await _kullaniciService.GirisYapAsync(loginRequest);
+            if (result.Success)
             {
-                return BadRequest("Geçersiz giriş bilgileri."); // 400 Bad Request if DTO is null
+                return Ok(result); // Return the token if successful
             }
+            return Unauthorized(); // Or BadRequest() depending on your API design
+        }
+        [HttpPost("logout")]
+        public async Task<IActionResult> CikisYap()
+        {
+            var result = await _kullaniciService.CikisYap();
 
-            // Call the service to authenticate the user
-            var loginSuccess = await _kullaniciService.GirisYapAsync(girisYapDto);
+            if (result)
+                return Ok(new { message = "Logged out successfully." });
 
-            if (loginSuccess)
-            {
-                // Return 200 OK if login is successful
-                return Ok("Giriş başarılı.");
-            }
-            else
-            {
-                // Return 401 Unauthorized if login fails
-                return Unauthorized("Geçersiz kullanıcı adı veya şifre.");
-            }
+            return BadRequest(new { message = "Logout failed." });
         }
     }
 }
