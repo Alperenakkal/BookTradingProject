@@ -1,5 +1,6 @@
 ﻿using BookTradingProjectAPI.Data.Context;
 using BookTradingProjectAPI.Models.KitapModel;
+using BookTradingProjectAPI.Repositories.BaseRepositories;
 using BookTradingProjectAPI.Repositories.IRepositories;
 
 namespace BookTradingProjectAPI.Repositories
