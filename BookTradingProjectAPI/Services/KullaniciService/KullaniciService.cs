@@ -84,7 +84,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                     return new GirisYapResponseDto { Success = false };
                 }
 
-                // Validate the password
+                
                 var passwordParts = user.Sifre.Split(':');
                 var salt = passwordParts[0];
                 var hash = passwordParts[1];
@@ -107,7 +107,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
                 var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext != null)
                 {
-                    // Generate a secure cookie with the token
+                    
                     var cookieOptions = new CookieOptions
                     {
                         HttpOnly = true,
@@ -160,7 +160,7 @@ namespace BookTradingProjectAPI.Services.KullaniciService
         {
             return new Kullanici
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 KullaniciAdi = kayıtOlDto.KullaniciAdi,
                 AdSoyad = kayıtOlDto.AdSoyad,
                 TelefonNo = kayıtOlDto.TelefonNo,
@@ -196,6 +196,11 @@ namespace BookTradingProjectAPI.Services.KullaniciService
             }
         }
 
+        public async Task<Kullanici> IdIleKullaniciCagir(string kullaniciId)
+        {
+            // Assuming '_kullaniciReadRepository' uses the updated GetByIdAsync method with a string parameter.
+            return await _kullaniciReadRepository.GetByIdAsync(kullaniciId);
+        }
 
     }
 }

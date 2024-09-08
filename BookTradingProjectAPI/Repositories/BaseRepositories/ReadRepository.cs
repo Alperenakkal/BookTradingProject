@@ -25,13 +25,14 @@ namespace BookTradingProjectAPI.Repositories.BaseRepositories
             return query;
         }
 
-        public async Task<TEntity> GetByIdAsync(Guid id, bool tracking = true)
+        public async Task<TEntity> GetByIdAsync(string id, bool tracking = true)
         {
             var query = Table.AsQueryable();
             if (!tracking)
                 query = Table.AsNoTracking();
             return await query.FirstOrDefaultAsync(data => data.Id == id);
         }
+
         public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> method, bool tracking = true)
         {
             var query = Table.AsQueryable();
