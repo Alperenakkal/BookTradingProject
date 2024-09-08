@@ -47,5 +47,24 @@ namespace BookTradingProject.Controllers
 
             return BadRequest(new { message = "Hata..." });
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> IdIleKullaniciCagir(string id)
+        {
+            try
+            {
+                var kullanici = await _kullaniciService.IdIleKullaniciCagir(id);
+                if (kullanici == null)
+                {
+                    return NotFound("Kullanıcı bulunamadı.");
+                }
+                return Ok(kullanici);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not shown here for simplicity)
+                return StatusCode(500, "Sunucu hatası oluştu.");
+            }
+        }
+
     }
 }

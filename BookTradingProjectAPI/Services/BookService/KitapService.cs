@@ -21,10 +21,10 @@ namespace BookTradingProjectAPI.Services.BookService
         {
             try
             {
-
-
+            
                 Kitap kitap = new Kitap
                 {
+                    Id = Guid.NewGuid().ToString(), 
                     KitapAdi = model.KitapAdi,
                     KullaniciId = model.KullaniciId,
                     Durum = model.Durum,
@@ -33,24 +33,29 @@ namespace BookTradingProjectAPI.Services.BookService
                     Yazar = model.Yazar,
                     Kategori = model.Kategori,
                     OlusturlmaTarihi = DateTime.Now
-
                 };
+
+           
                 var isAdded = await _kitapWriteRepository.AddSingleAsync(kitap);
-                if (isAdded == false) { return false; }
+                if (!isAdded)
+                {
+                    return false; 
+                }
+
+           
                 await _kitapWriteRepository.SaveAsync();
-                return true;
+                return true; 
             }
             catch (Exception e)
             {
-
-                throw new Exception("Kitap ekleme işlemi basarizi", e);
+    
+                throw new Exception("Kitap ekleme işlemi başarısız", e);
             }
-
-
         }
+
         public async Task<Kitap> GetByIdFromKitap(string id)
         {
-            Guid Id = new Guid(id);
+            string Id = new string(id);
             Kitap kitap = await _kitapReadRepository.GetByIdAsync(Id);
             return kitap;
 
@@ -59,7 +64,7 @@ namespace BookTradingProjectAPI.Services.BookService
         {
             try
             {
-                Guid Id = new Guid(id);
+                string Id = new string(id);
                 Kitap kitap = await _kitapReadRepository.GetByIdAsync(Id);
                 var isDeleted = _kitapWriteRepository.RemoveSingle(kitap);
                 if (isDeleted == false) { return false; }

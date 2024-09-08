@@ -24,9 +24,8 @@ namespace BookTradingProjectAPI.Migrations
 
             modelBuilder.Entity("BookTradingProjectAPI.Models.KitapModel.Kitap", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Durum")
                         .HasColumnType("int");
@@ -64,9 +63,8 @@ namespace BookTradingProjectAPI.Migrations
 
             modelBuilder.Entity("BookTradingProjectAPI.Models.UserModels.Kullanici", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdSoyad")
                         .IsRequired()
